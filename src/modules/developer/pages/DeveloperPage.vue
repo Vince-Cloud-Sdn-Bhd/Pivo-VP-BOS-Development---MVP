@@ -1,0 +1,10 @@
+<script setup lang="ts">
+import {ref} from 'vue'
+import {useDb} from '../../../stores/db'
+import {StatusBadge,KpiTile} from '../../../components/shared'
+import {publishConstruction,completeHandover} from '../../partner/domain'
+const db=useDb(),message=ref('')
+function publish(id:string){try{publishConstruction(id);message.value='Block update published to its permitted audience.'}catch(e){message.value=e instanceof Error?e.message:''}}
+function handover(){try{completeHandover('case-demo');message.value='Handover completed.'}catch(e){message.value=e instanceof Error?e.message:''}}
+</script>
+<template><div class="page"><header class="page-header"><div><p class="eyebrow">Developer workspace</p><h1>My projects</h1><p>Bookings, executed SPAs, construction evidence and handover remain distinct.</p></div><StatusBadge label="Demo Developer"/></header><p v-if="message" class="card form-error">{{message}}</p><div class="card-grid"><KpiTile label="Developer-confirmed Bookings" :value="db.data.bookings.filter(b=>b.status==='BOOKED').length"/><KpiTile label="Executed SPAs" :value="db.data.legalMatters.filter(m=>m.kind==='sale'&&m.stage==='executed').length"/><KpiTile label="Open handover issues" :value="db.data.handovers.flatMap(h=>h.openIssues).length"/></div><section class="card"><h2>Construction updates</h2><article v-for="update in db.data.constructionUpdates" :key="update.id" class="data-row"><span><strong>{{update.blockId}} · {{update.stage}}</strong><br>{{update.state}} · weight {{update.weightPct??'Unknown'}}%</span><div class="actions"><StatusBadge :label="update.published?'Published':'Draft'"/><el-button v-if="!update.published" @click="publish(update.id)">Publish update</el-button></div></article></section><section class="card"><h2>Handover readiness</h2><p v-for="clearance in db.data.handovers[0].clearances" :key="clearance.name"><StatusBadge :label="clearance.done?'Complete':'Open'"/> {{clearance.name}}</p><el-button @click="handover">Attempt handover completion</el-button></section></div></template>

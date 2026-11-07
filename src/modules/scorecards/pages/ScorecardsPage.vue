@@ -1,0 +1,9 @@
+<script setup lang="ts">
+import {computed} from 'vue'
+import {PreviewBanner,StatusBadge,KpiTile} from '../../../components/shared'
+import {scorecard} from '../logic'
+const banker=scorecard({r:{earned:18,eligible:20,weight:30},t:{earned:16,eligible:20,weight:30},q:{earned:10,eligible:10,weight:25},f:{earned:9,eligible:10,weight:15},observations:50,workItems:12})
+const provisional=scorecard({r:{earned:3,eligible:4,weight:30},t:{earned:2,eligible:4,weight:30},q:{earned:4,eligible:4,weight:25},f:{earned:3,eligible:4,weight:15},observations:6,workItems:4})
+const displayed=computed(()=>banker.score?.toFixed(1))
+</script>
+<template><div class="page"><header class="page-header"><div><p class="eyebrow">Quality and learning</p><h1>Scorecards</h1><p>Private by default. Scores cannot automatically change pay, commission, fees, authority or lead allocation.</p></div><PreviewBanner/></header><div class="card-grid"><KpiTile label="Banker example" :value="displayed"/><KpiTile label="Rule version" value="v1.0"/><KpiTile label="Provisional sample" :value="provisional.score??'Unknown'"/></div><section class="card"><h2>Component evidence</h2><p>R 18/20 = 90% × 30% = 27.0</p><p>T 16/20 = 80% × 30% = 24.0</p><p>Q 10/10 = 100% × 25% = 25.0</p><p>F 9/10 = 90% × 15% = 13.5</p><StatusBadge :label="banker.provisional?'Provisional':'Eligible to rank'"/></section><section class="card"><h2>Provisional result</h2><p>Six observations and four work items remain provisional. Missing data is never silently renormalised.</p><StatusBadge label="Provisional"/></section><section class="card"><h2>Coaching loop</h2><p>Verify evidence → practise → apply at work → measure durable resolution.</p><p class="preview-banner">TO CONFIRM · recognition thresholds, qualifying windows and expiry</p></section></div></template>

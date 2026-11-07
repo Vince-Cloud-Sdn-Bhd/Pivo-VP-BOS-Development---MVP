@@ -1,0 +1,8 @@
+<script setup lang="ts">
+import {computed,ref} from 'vue'
+import {useDb} from '../../../stores/db'
+import {StatusBadge,AgeChip} from '../../../components/shared'
+const db=useDb(),checked=ref<Record<string,boolean>>({})
+const items=computed(()=>db.data.tasks.filter(t=>t.state!=='done'))
+</script>
+<template><div class="page"><header class="page-header"><div><p class="eyebrow">Operations assurance</p><h1>Customer Success</h1><p>Stalled cases, missing evidence, failed communications and leave cover have named owners.</p></div><el-button>Refresh assurance</el-button></header><div class="card-grid"><article class="card"><span class="source-meta">Unowned work</span><strong class="kpi-value">{{items.filter(i=>!i.ownerUserId).length}}</strong></article><article class="card"><span class="source-meta">Stale updates</span><strong class="kpi-value">1</strong></article><article class="card"><span class="source-meta">Failed messages</span><strong class="kpi-value">0 of 3 known</strong></article></div><section class="card"><h2>Daily assurance</h2><article v-for="item in items" :key="item.id" class="card" style="margin-bottom:12px"><div class="actions" style="justify-content:space-between"><strong>{{item.title}}</strong><StatusBadge :label="item.state"/></div><p>{{item.blocker?.cause||'Waiting for the next milestone.'}}</p><AgeChip :gross="18" :active="16" :overdue="4"/><label><input v-model="checked[item.id]" type="checkbox"> Meaningful update: evidence or state changed</label></article></section><section class="card"><h2>Recovery record</h2><p class="muted">Cause, affected milestones, options, commitment date and verification happen in one record. Repeated empty comments do not count as progress.</p></section></div></template>

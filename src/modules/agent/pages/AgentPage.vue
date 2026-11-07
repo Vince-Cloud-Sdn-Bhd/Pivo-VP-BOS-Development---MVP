@@ -1,0 +1,8 @@
+<script setup lang="ts">
+import {useDb} from '../../../stores/db'
+import {useSession} from '../../../stores/session'
+import {StatusBadge,KpiTile} from '../../../components/shared'
+import {fmtMoney} from '../../../lib/money'
+const db=useDb(),session=useSession()
+</script>
+<template><div class="page"><header class="page-header"><div><p class="eyebrow">Agent workspace</p><h1>My allocated inventory</h1><p>Only units allocated to {{session.activePersona?.name}}'s agency are shown.</p></div><StatusBadge label="AIVO connected"/></header><div class="card-grid"><KpiTile label="Allocated units" :value="db.data.units.filter(u=>u.allocatedAgencyIds.includes('org-agency')).length"/><KpiTile label="My attributed Bookings" :value="db.data.bookings.filter(b=>b.agentUserId===session.activeUserId).length"/><KpiTile label="Pending sync" :value="db.data.syncStatuses.find(s=>s.partner==='AIVO')?.pendingCount"/></div><section class="card table-scroll"><el-table :data="db.data.units.filter(u=>u.allocatedAgencyIds.includes('org-agency'))"><el-table-column prop="unitNo" label="Unit"/><el-table-column label="Status"><template #default="{row}"><StatusBadge :label="row.status"/></template></el-table-column><el-table-column label="List price"><template #default="{row}">{{fmtMoney(row.listPriceMinor)}}</template></el-table-column><el-table-column label="Action"><template #default="{row}"><router-link :to="`/bookings/new?unit=${row.id}`">Place hold</router-link></template></el-table-column></el-table><p class="source-meta">AIVO's separate agent-side fee never combines with PIVO's B2B fee.</p></section></div></template>

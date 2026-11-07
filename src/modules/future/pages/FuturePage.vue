@@ -1,0 +1,6 @@
+<script setup lang="ts">
+import {ref} from 'vue'
+import {PreviewBanner,StatusBadge} from '../../../components/shared'
+const tab=ref('defects')
+</script>
+<template><div class="page"><header class="page-header"><div><p class="eyebrow">Separate scope</p><h1>Future services</h1><p>Future service access excludes purchase-loan and prior-owner files.</p></div></header><PreviewBanner kind="future"/><div class="actions"><el-button v-for="name in ['defects','renovation','rental','transfer']" :key="name" :type="tab===name?'primary':''" @click="tab=name">{{name}}</el-button></div><section class="card"><h2>{{tab[0].toUpperCase()+tab.slice(1)}}</h2><p v-if="tab==='defects'">Triage → assign → schedule → rectify → verify → close. Reopened defects preserve age and evidence.</p><p v-else-if="tab==='renovation'">Owner mandate, approved scope, quotation and contractor are required; variations need approval before budget or schedule change.</p><p v-else-if="tab==='rental'">Separate owner mandate with stale sync labelled. Access stops when authority ends.</p><p v-else>Fresh access review precedes any approved property history. Prior purchasers' personal records stay excluded.</p><StatusBadge label="FUTURE SERVICE"/></section></div></template>
