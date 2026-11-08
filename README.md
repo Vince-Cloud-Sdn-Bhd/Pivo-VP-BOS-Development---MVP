@@ -23,7 +23,7 @@ The `main` branch deploys automatically to GitHub Pages through
 `.github/workflows/deploy-pages.yml`.
 
 Public URL:
-`https://vince-cloud-sdn-bhd.github.io/Pivo-VP-BOS-Development---MVP/`
+`https://vince-cloud-sdn-bhd.github.io/Pivo-VP-BOS-Development-MVP/`
 
 ## Personas
 
